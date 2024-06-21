@@ -13,29 +13,44 @@ import (
 )
 
 func main() {
-	// address of etherum env
 	client, err := ethclient.Dial("http://127.0.0.1:8545/")
 	if err != nil {
 		panic(err)
 	}
 
-	// create auth and transaction package for deploying smart contract
-	auth := getAccountAuth(client, "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80")
+	// 部署合约
+	contractAddress := deployContract(client)
+	//连接合约，输出合约余额
+	contract := connectContract(client, contractAddress)
+	balance, err := contract.GetContractBalance(&bind.CallOpts{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("合约余额:", balance, "wei")
+}
 
-	//deploying smart contract
-	deployedContractAddress, _, _, err := bank.DeployBank(auth, client) //api is redirected from api directory from our contract go file
+func connectContract(client *ethclient.Client, address common.Address) *bank.Bank {
+	conn, err := bank.NewBank(common.HexToAddress(address.Hex()), client)
+	if err != nil {
+		panic(err)
+	}
+	return conn
+}
+
+func deployContract(client *ethclient.Client) common.Address {
+	auth := getAccountAuth(client, "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d")
+
+	deployedContractAddress, _, _, err := bank.DeployBank(auth, client)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(deployedContractAddress.Hex()) // print deployed contract address
+	fmt.Println(deployedContractAddress.Hex())
 
-	conn, err := bank.NewBank(common.HexToAddress(deployedContractAddress.Hex()), client)
-	fmt.Println(conn.GetContractBalance(&bind.CallOpts{}))
+	return deployedContractAddress
 }
 
 func getAccountAuth(client *ethclient.Client, accountAddress string) *bind.TransactOpts {
-
 	privateKey, err := crypto.HexToECDSA(accountAddress)
 	if err != nil {
 		panic(err)
@@ -49,7 +64,6 @@ func getAccountAuth(client *ethclient.Client, accountAddress string) *bind.Trans
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
 
-	//fetch the last use nonce of account
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
 		panic(err)
@@ -65,8 +79,8 @@ func getAccountAuth(client *ethclient.Client, accountAddress string) *bind.Trans
 		panic(err)
 	}
 	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(1000000000000000000) // in wei
-	auth.GasLimit = uint64(3000000)              // in units
+	auth.Value = big.NewInt(1000000000000000000) // wei
+	auth.GasLimit = uint64(3000000)              // units
 	auth.GasPrice = big.NewInt(875000000)
 
 	return auth
