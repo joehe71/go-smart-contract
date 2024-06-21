@@ -5,7 +5,7 @@
 
 - 安装solc编译工具: https://docs.soliditylang.org/en/v0.8.2/installing-solidity.html#linux-packages
 - 编译abigen命令: https://github.com/ethereum/go-ethereum
-- 安装本地测试链: https://trufflesuite.com/ganache
+- 安装本地测试链: [ganache](https://trufflesuite.com/ganache)或者[hardhat](https://hardhat.org/hardhat-runner/docs/guides/deploying)
 
 ## 2. abi与bin生成
 
