@@ -9,8 +9,7 @@
 
 ## 2. abi与bin生成
 
-- bin生成: solcjs --optimize --bin ./contracts/Bank.sol  -o build
-- abi生成: solcjs --optimize --abi  ./contracts/Bank.sol  -o build
+- abi bin 生成: solcjs --optimize --abi --bin ./contracts/Bank.sol  -o build
 
 
 ## 3. 生成合约go文件
