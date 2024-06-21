@@ -8,6 +8,10 @@ contract Bank {
     // 所有账户
     address[] private accounts;
 
+    constructor() payable {
+
+    }
+
     // 存款函数，允许用户存入一定数量的以太币
     function deposit() public payable {
         require(msg.value > 0, "Deposit amount must be greater than zero");
@@ -41,5 +45,9 @@ contract Bank {
             totalBalance += balances[accounts[i]];
         }
         return totalBalance;
+    }
+
+    function getContractBalance() public view returns (uint256)  {
+        return address(this).balance;
     }
 }
