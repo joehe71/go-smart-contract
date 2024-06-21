@@ -9,6 +9,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"go-contracts/api"
+	"log"
 	"math/big"
 )
 
@@ -26,7 +27,26 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("合约余额:", balance, "wei")
+	fmt.Println("合约余额:", toEth(balance))
+
+	//查询账户
+	getAccountInfo(client)
+}
+
+func getAccountInfo(client *ethclient.Client) {
+	address := common.HexToAddress("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
+	balance, err := client.BalanceAt(context.Background(), address, nil)
+	if err != nil {
+		log.Fatalf("Failed to get account balance: %v", err)
+	}
+	fmt.Println("账户余额:", toEth(balance))
+
+	nonce, err := client.PendingNonceAt(context.Background(), address)
+	if err != nil {
+		log.Fatalf("Failed to get account nonce: %v", err)
+	}
+	fmt.Println("账户nonce:", nonce)
+
 }
 
 func connectContract(client *ethclient.Client, address common.Address) *bank.Bank {
@@ -84,4 +104,10 @@ func getAccountAuth(client *ethclient.Client, accountAddress string) *bind.Trans
 	auth.GasPrice = big.NewInt(875000000)
 
 	return auth
+}
+
+func toEth(wei *big.Int) *big.Float {
+	ethValue := new(big.Float).SetInt(wei)
+	ethValue.Quo(ethValue, big.NewFloat(1e18))
+	return ethValue
 }

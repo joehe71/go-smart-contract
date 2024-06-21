@@ -17,7 +17,3 @@
 
 - go文件生成: abigen --abi=./build/contracts_Bank_sol_Bank.abi   --bin=./build/contracts_Bank_sol_Bank.bin  --pkg=api --out=/api/Bank.go
 
-## 4.部署合约
-
-## 5. 与合约交互
-
