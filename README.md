@@ -17,3 +17,5 @@
 
 - go文件生成: abigen --abi=./build/contracts_Bank_sol_Bank.abi   --bin=./build/contracts_Bank_sol_Bank.bin  --pkg=api --out=/api/Bank.go
 
+# 架构图
+![My Local Image](./架构图.png)
