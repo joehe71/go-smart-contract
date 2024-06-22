@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	callTon()
+	callEth()
 }
 
 func callTon() {

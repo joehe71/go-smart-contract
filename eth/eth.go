@@ -38,7 +38,7 @@ func ConnectContract(client *ethclient.Client, address common.Address) *bank.Ban
 }
 
 func DeployContract(client *ethclient.Client) common.Address {
-	auth := getAccount(client, "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d")
+	auth := getAccount(client, "df57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e")
 
 	deployedContractAddress, _, _, err := bank.DeployBank(auth, client)
 	if err != nil {
