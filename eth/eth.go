@@ -38,7 +38,7 @@ func ConnectContract(client *ethclient.Client, address common.Address) *bank.Ban
 }
 
 func DeployContract(client *ethclient.Client) common.Address {
-	auth := getAccountAuth(client, "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d")
+	auth := getAccount(client, "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d")
 
 	deployedContractAddress, _, _, err := bank.DeployBank(auth, client)
 	if err != nil {
@@ -50,7 +50,7 @@ func DeployContract(client *ethclient.Client) common.Address {
 	return deployedContractAddress
 }
 
-func getAccountAuth(client *ethclient.Client, accountAddress string) *bind.TransactOpts {
+func getAccount(client *ethclient.Client, accountAddress string) *bind.TransactOpts {
 	privateKey, err := crypto.HexToECDSA(accountAddress)
 	if err != nil {
 		panic(err)
@@ -74,16 +74,16 @@ func getAccountAuth(client *ethclient.Client, accountAddress string) *bind.Trans
 		panic(err)
 	}
 
-	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
+	account, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
 		panic(err)
 	}
-	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(1000000000000000000) // wei
-	auth.GasLimit = uint64(3000000)              // units
-	auth.GasPrice = big.NewInt(875000000)
+	account.Nonce = big.NewInt(int64(nonce))
+	account.Value = big.NewInt(1000000000000000000) // wei
+	account.GasLimit = uint64(3000000)              // units
+	account.GasPrice = big.NewInt(875000000)
 
-	return auth
+	return account
 }
 
 func ToEth(wei *big.Int) *big.Float {
